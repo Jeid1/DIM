@@ -1,16 +1,32 @@
 @echo off
-set "basePath=%~dp0"  :: Définit le chemin de base comme le répertoire actuel
-set "year=2025"
-set "months=01 JANVIER 02 FÉVRIER 03 MARS 04 AVRIL 05 MAI 06 JUIN 07 JUILLET 08 AOÛT 09 SEPTEMBRE 10 OCTOBRE 11 NOVEMBRE 12 DÉCEMBRE"
+setlocal enabledelayedexpansion
 
-:: Créer le dossier principal
+:: Définir le chemin de base
+set "basePath=%~dp0"  :: Définit le répertoire actuel
+set "year=2025"
+
+:: Liste des mois sans accents
+set "months=01_JANVIER 02_FEVRIER 03_MARS 04_AVRIL 05_MAI 06_JUIN 07_JUILLET 08_AOUT 09_SEPTEMBRE 10_OCTOBRE 11_NOVEMBRE 12_DECEMBRE"
+
+:: Créer le dossier principal pour l'année et MCO
 mkdir "%basePath%%year%\MCO"
 
 :: Boucle pour créer les dossiers des mois et sous-dossiers
 for %%M in (%months%) do (
-    mkdir "%basePath%%year%\MCO\%%M %year%\druides\SEJOURS"
+    :: Remplacer les underscores (_) par des espaces pour les noms des dossiers
+    set "monthName=%%M"
+    set "monthName=!monthName:_= !"
+    
+    :: Créer le dossier du mois (exemple : "01 JANVIER")
+    mkdir "%basePath%%year%\MCO\!monthName!"
+    
+    :: Créer le sous-dossier "druides" dans le mois
+    mkdir "%basePath%%year%\MCO\!monthName!\druides"
+    
+    :: Créer le sous-dossier "SEJOURS" dans "druides"
+    mkdir "%basePath%%year%\MCO\!monthName!\druides\SEJOURS"
 )
 
-echo Arborescence créée avec succès dans le chemin suivant :
-echo %basePath%
+echo Arborescence créée avec succès dans :
+echo %basePath%%year%\MCO
 pause
